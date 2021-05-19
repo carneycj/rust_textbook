@@ -18,12 +18,13 @@ fn main() {
         let mut guess = String::new();
 
         io::stdin()
-            // Reads the user input and appends it to guess.  The & means that this
-            // is a reference to the original variable location.  References are
-            // also default immutable, so in order to append the data, we use mut
+            // Reads the user input and appends it to guess.  The & means that
+            // this is a reference to the original variable location.
+            // References are also default immutable, so in order to append the
+            // data, we use mut
             .read_line(&mut guess)
-            // This provides info to help understand errors.  This is a good step
-            // but actual error handling is better
+            // This provides info to help understand errors.  This is a good
+            // step but actual error handling is better
             .expect("Failed to read line");
 
         // This shadows the previous value of guess with a new one.  We also are
