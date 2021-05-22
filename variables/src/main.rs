@@ -117,6 +117,7 @@ fn using_ifs() {
 
     let number = 6;
     // See also "match" which does something similar
+    // All branches of if statements must evaluate to the same type
     if number % 4 == 0 {
         println!("number is divisible by 4");
     } else if number % 3 == 0 {
