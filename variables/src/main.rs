@@ -6,6 +6,22 @@ fn main() {
     x = 6;
     println!("The value of x is {}", x);
     // This creates an immutable variable y
+
+    operations_and_types();
+
+    another_function(5, 6);
+    state_vs_exp();
+
+    let f = five();
+    println!("The function five returns {}", f);
+
+    let s = plus_one(5);
+    println!("plus_one turns 5 to {}", s);
+
+    using_ifs();
+}
+
+fn operations_and_types() {
     let y = 5;
     // This is shadowing.  It is when you reinitialize the variable to be able
     // to assign a new value to it.  This replaces the old variable with the
@@ -49,15 +65,6 @@ fn main() {
     let _b = [3; 5];
     // To access elements of an array:
     let _second = a[1];
-
-    another_function(5, 6);
-    state_vs_exp();
-
-    let f = five();
-    println!("The function five returns {}", f);
-
-    let s = plus_one(5);
-    println!("plus_one turns 5 to {}", s);
 }
 
 // It makes no difference if the function is written before or after where it is
@@ -95,4 +102,33 @@ fn five() -> i32 {
 // return a value in the function
 fn plus_one(x: i32) -> i32 {
     x + 1
+}
+
+fn using_ifs() {
+    let number = 3;
+
+    // Non-booleans cannot be converted to booleans automatically (so
+    // "if number {" doesn't work because number is an int)
+    if number < 5 {
+        println!("Condition was true");
+    } else {
+        println!("Condition was false");
+    }
+
+    let number = 6;
+    // See also "match" which does something similar
+    if number % 4 == 0 {
+        println!("number is divisible by 4");
+    } else if number % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }
+
+    // if is an expression, so it can be used with let
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+    println!("The number is {}", number);
 }
