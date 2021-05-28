@@ -23,13 +23,16 @@ fn using_structs() {
         active: true,
         sign_in_count: 1,
     };
+    user1.username = String::from("user5");
     user1.email = String::from("another");
+    user1.active = true;
+    user1.sign_in_count = 2;
 
     let email = String::from("an_email@email.com");
     let username = String::from("some_user");
-    let user2 = build_user(email, username);
+    let _user2 = build_user(email, username);
 
-    let user2 = User {
+    let _user2 = User {
         email: String::from("another@email.com"),
         username: String::from("yet_another_username"),
         ..user1 // This is the same as:
@@ -53,6 +56,6 @@ fn using_tuple_structs() {
 
     // black and origin are different types, because they're instances of
     // different tuple structs
-    let black = Color(0, 0, 0);
-    let origin = Point(0, 0, 0);
+    let _black = Color(0, 0, 0);
+    let _origin = Point(0, 0, 0);
 }
