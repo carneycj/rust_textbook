@@ -6,6 +6,7 @@ fn main() {
     route(six);
 
     struct_and_enum();
+    discussing_nulls();
 }
 
 enum IpAddrKindSimple {
@@ -74,4 +75,31 @@ impl Message {
     }
 }
 
-// COntinue at: The Option Enum and Its Advantages Over Null Values
+// Null isn't implemented the way most other languages do.  It isn't a type, but
+// instead is an enum that allows for the concept of a value being present or
+// absent.  This is in the standard library:
+enum ExampleOption<T> {
+    // This enum and its variants (Some(T) and None) are all included in the
+    // prelude.  This means that you don't even need to use Option:: to call
+    // it.  <T> is similar to Some(T).  The variable T can be one value of
+    // one type
+    Some(T),
+    None,
+}
+
+fn discussing_nulls() {
+    // The type of a variable can be inferred when there is actually a value
+    let some_number = Some(5);
+    let some_string = Some("a string");
+    // Option can't infer the type of a blank value, so we have to explicitly
+    // include it
+    let absent_number: Option<i32> = None;
+
+    // You can't combine a type with an Option<type>.  You would need to use
+    // different built-in methods for Option, or you can use a 'match' expression
+    // let x: i8 = 5;
+    // let y: Option<i8> = Some(5);
+    // let sum = x + y;
+}
+
+// Continue at: The match Control Flow Operator
