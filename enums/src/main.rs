@@ -7,6 +7,8 @@ fn main() {
 
     struct_and_enum();
     discussing_nulls();
+    using_match();
+    using_if_let()
 }
 
 enum IpAddrKindSimple {
@@ -102,4 +104,160 @@ fn discussing_nulls() {
     // let sum = x + y;
 }
 
-// Continue at: The match Control Flow Operator
+fn using_match() {
+    // match is great but if checking only one condition, if let may be better
+    let value = value_in_cents(Coin::Penny);
+    println!("{}", value);
+    let value2 = value_in_cents(Coin::Quarter(UsState::Alaska));
+    println!("{}", value2);
+
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+
+    use_placeholder();
+}
+
+fn use_placeholder() {
+    let some_u8_value = 0u8;
+    // match is exhaustive.  This means you need to cover all possible cases
+    // One way to do blanket covering is with '_'.  It needs to be the last case
+    match some_u8_value {
+        1 => println!("one"),
+        3 => println!("three"),
+        5 => println!("five"),
+        7 => println!("seven"),
+        _ => (),
+    }
+}
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        // Some(5) matches Some(i), so i grabs the value within Some() (so it
+        // grabs '5'), and adds 1 to it, leaving it within the wrapper
+        Some(i) => Some(i + 1),
+    }
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    // This is practically the same as 'if', but if needs the expression to
+    // evaluate to a boolean, but match allows for any type.  Here we use the
+    // type Coin that we just created
+    match coin {
+        // These are the arms of the match case.  Each arm has two parts: a
+        // pattern and some code.  The two parts are split by '=>' and each arm
+        // is separated with a comma
+        Coin::Penny => {
+            println!("Lucky penny!");
+            1
+        }
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {
+            // This is why we needed the debug mode (to print the specific state)
+            println!("State quarter from {:?}!", state);
+            25
+        }
+    }
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+#[derive(Debug)] // to inspect the state
+enum UsState {
+    Alabama,
+    Alaska,
+    Arizona,
+    Arkansas,
+    California,
+    Colorado,
+    Connecticut,
+    Delaware,
+    Florida,
+    Georgia,
+    Hawaii,
+    Idaho,
+    Illinois,
+    Indiana,
+    Iowa,
+    Kansas,
+    Kentucky,
+    Louisiana,
+    Maine,
+    Maryland,
+    Massachusetts,
+    Michigan,
+    Minnesota,
+    Mississippi,
+    Missouri,
+    Montana,
+    Nebraska,
+    Nevada,
+    NewHampshire,
+    NewJersey,
+    NewMexico,
+    NewYork,
+    NorthCarolina,
+    NorthDakota,
+    Ohio,
+    Oklahoma,
+    Oregon,
+    Pennsylvania,
+    RhodeIsland,
+    SouthCarolina,
+    SouthDakota,
+    Tennessee,
+    Texas,
+    Utah,
+    Vermont,
+    Virginia,
+    Washington,
+    WestVirginia,
+    Wisconsin,
+    Wyoming,
+}
+
+fn using_if_let() {
+    example_match();
+    example_if_let();
+
+    quarter_example(Coin::Nickel);
+    quarter_example(Coin::Quarter(UsState::Pennsylvania));
+}
+
+fn example_match() {
+    let some_u8_value = Some(0u8);
+    match some_u8_value {
+        Some(3) => println!("three"),
+        _ => (),
+    }
+}
+
+fn example_if_let() {
+    let some_u8_value = Some(0u8);
+    if let Some(3) = some_u8_value {
+        println!("three");
+    }
+}
+
+fn quarter_example(coin: Coin) {
+    // let mut count = 0;
+    // match coin {
+    //     Coin::Quarter(state) => println!("State quarter from {:?}!", state),
+    //     _ => count += 1,
+    // }
+
+    // This is a cleaner way to write the short match case
+    let mut count = 0;
+    if let Coin::Quarter(state) = coin {
+        println!("State quarter from {:?}!", state);
+    } else {
+        count += 1;
+    }
+}
