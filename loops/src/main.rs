@@ -1,4 +1,8 @@
 fn main() {
+    // This is a single-line comment
+    /*
+    There are also block comments like this
+    */
     using_loop();
     using_while();
     using_for();

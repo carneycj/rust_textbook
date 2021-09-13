@@ -1,4 +1,5 @@
 // We have to add this dependency in the Cargo.toml file
+use colored::Colorize;
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
@@ -31,6 +32,9 @@ fn main() {
         // changing the type from a string into an int.  If the user input is
         // invalid, then we continue (skip this loop iteration and go again).
         // The _ means any value associated with the tag Err is accepted
+        // You can also to trim().parse().expect("Please type a number") instead
+        // of doing a match, but parse will panic and end the script with the
+        // message presented in expect
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
@@ -38,11 +42,13 @@ fn main() {
 
         println!("You guessed: {}", guess);
 
+        // .cmp is a compare method (greater than, less than, or equal to)
+        // We can also add color to our command line with colorize
         match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
+            Ordering::Less => println!("{}", "Too small!".red()),
+            Ordering::Greater => println!("{}", "Too big!".red()),
             Ordering::Equal => {
-                println!("You win!");
+                println!("{}", "You win!".green());
                 break;
             }
         }
