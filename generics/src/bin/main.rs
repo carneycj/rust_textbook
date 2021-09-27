@@ -4,6 +4,7 @@ fn main() {
     // Traits can be used to constrain the types used in generics
 
     exploring_generics();
+    exploring_traits();
 }
 
 fn exploring_generics() {
@@ -79,16 +80,24 @@ fn largest_char(list: &[char]) -> char {
 // 'T'.  This function has one parameter named 'list', which is a slice of
 // values of type 'T'.  The 'largest' function will return a value of the same
 // type 'T'
-// fn largest<T>(list: &[T]) -> T {
-// let mut largest = list[0];
+// We use PartialOrd in the trait bounds in order to do the comparisons
+// list can hold values that don't implement Copy, so we add Copy to T
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    // If we wanted to expand this out to more types, ones that don't implement
+    // Copy, we could use Clone instead.  Clone makes more heap allocations,
+    // slowing things down, but it allows you to clone data in order to give
+    // largest ownership of the slice it's looking at.
+    // You could also implement this function to return &T rather than T.  This
+    // would remove the need for Copy or Clone entirely.
+    let mut largest = list[0];
 
-// for &item in list {
-//     if item > largest {
-//         largest = item;
-//     }
-// }
-// largest
-// }
+    for &item in list {
+        if item > largest {
+            largest = item;
+        }
+    }
+    largest
+}
 
 // We can also apply generics to structs:
 // In this case, x and y must be the same type
@@ -172,4 +181,58 @@ fn are_gens_slow() {
 
     let integer = Option_i32::Some(5);
     let float = Option_f64::Some(5.0);
+}
+
+fn exploring_traits() {
+    // Traits are similar to a feature commonly called interfaces in other
+    // languages
+
+    // A trait tells the compiler the functionality that a particular type has
+    // and can share with other types.  This allows us to define shared behavior
+    // in an abstract way
+
+    // Trait bounds can be used to specify that a generic type can be any type
+    // that has certain behavior
+
+    // This allows us to use both lib and bin at the same time
+    use generics::{NewsArticle, Pair, Summary, Tweet};
+
+    let tweet = Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you know, people"),
+        reply: false,
+        retweet: false,
+    };
+
+    println!("1 new tweet: {}", tweet.summarize());
+
+    // One restriction to note is that we can only implement a trait on a type
+    // if either the trait or the type is local to our crate
+
+    let article = NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+            hockey team in the NHL.",
+        ),
+    };
+
+    println!("New article available! {}", article.summarize2());
+
+    println!("1 new tweet: {}", tweet.summarize3());
+
+    generics::notify(&tweet);
+
+    let number_list = vec![34, 50, 25, 100, 65];
+    let result = largest(&number_list);
+    println!("The largest number: {}", result);
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+    let result = largest(&char_list);
+    println!("The largest char: {}", result);
+
+    let pair = Pair::new(5, 9);
+    pair.cmp_display();
 }
