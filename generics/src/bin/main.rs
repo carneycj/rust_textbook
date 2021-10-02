@@ -115,7 +115,8 @@ struct Point2<T, U> {
 
 // We have to use the <T> right after impl to specify that we're implementing
 // methods on the type Point<T>.  Doing this is what tells the compiler that T
-// is a generic and not a concrete type.
+// is a generic and not a concrete type.  This <T> is not tied to the <T> in the
+// struct.  We could write it as <U> or anything else with no issue.
 impl<T> Point<T> {
     fn x(&self) -> &T {
         &self.x

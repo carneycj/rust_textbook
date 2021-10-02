@@ -52,6 +52,11 @@ impl Summary for Tweet {
         format!("{}: {}", self.username, self.content)
     }
 
+    // You can override default methods with specific implementations
+    fn summarize2(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+
     fn summarize_author(&self) -> String {
         format!("@{}", self.username)
     }
@@ -79,7 +84,7 @@ pub fn notify3(item1: &impl Summary, item2: &impl Summary) {
     );
 }
 
-// But this is beeter for explicitness and forces only one type within the trait
+// But this is better for explicitness and forces only one type within the trait
 pub fn notify4<T: Summary>(item1: &T, item2: &T) {
     println!(
         "Breaking news! {}, {}",
