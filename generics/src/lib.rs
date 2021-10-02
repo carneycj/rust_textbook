@@ -160,3 +160,86 @@ impl<T: Display + PartialOrd> Pair<T> {
 // impl<T: Display> ToString for T {
 //      ...
 // }
+
+// Without any lifetime annotations, rust can't tell what the lifetime of what
+// this function returns to in comparison to what comes in.  It also can't
+// compare the lifetimes of the two incoming arguments.
+// Lifetime annotations must start with "'", typically are lowercase, and are
+// short.  One lifetime annotation doesn't mean much because the purpose is to
+// compare lifetimes of different variables.  Here, we're saying that x and y
+// must live as long as the returned value.
+// It's important to remember that we're only specifying lifetimes, not changing
+// them.
+// The return value needs a lifetime annotation, and any paramaters that the
+// return value depends on.  It also needs to be something that has a lifetime
+// that extends beyond the function, so that it can actually be transferred.
+// Ultimately, lifetime annotations is all about linking the lifetimes of
+// various parameters and return values of functions.
+pub fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+// This lifetime annotation means an instance of ImportantExcerpt can't outlive
+// the reference holds in its part field
+pub struct ImportantExcerpt<'a> {
+    pub part: &'a str,
+}
+
+// Rust starts by trying to apply lifetimes to everything.  The compiler has
+// several patterns that it tries that are called the lifetime elision rules.
+// These rules are different common cases that the compiler will consider.  If
+// your function fits one of these cases, no annotations are needed.  If it does
+// not fit one of the cases, lifetime annotations will be needed.  The compiler
+// will not guess if there is any ambiguity.  Rather, it will throw an error and
+// have you clarify.
+// The Lifetime Elision Rules:
+// 1- Each parameter that is a reference will get its own lifetime parameter
+// 2- If there is exactly one input lifetime parameter, that lifetime is
+//      assigned to all output lifetime parameters
+// 3- If there are multiple input lifetime parameters, but one is &self or &mut
+//      self, then the lifetime of self is assigned to all output lifetime
+//      parameters
+pub fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+impl<'a> ImportantExcerpt<'a> {
+    // We don't need lifetime annotations here because it doesn't return a
+    // reference
+    fn level(&self) -> i32 {
+        3
+    }
+
+    // Here, the first rule gives each param a lifetime, and then the third rule
+    // sets the output lifetime to be equal to &self
+    pub fn announce_and_return_part(&self, announcement: &str) -> &str {
+        println!("Attention please: {}", announcement);
+        self.part
+    }
+}
+
+// use std::fmt::Display;
+// This is how you mix generics and lifetime annotations together
+pub fn longest_with_announcement<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
+where
+    T: Display,
+{
+    println!("Announcement: {}", ann);
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}

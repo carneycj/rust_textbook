@@ -5,6 +5,7 @@ fn main() {
 
     exploring_generics();
     exploring_traits();
+    exploring_lifetimes();
 }
 
 fn exploring_generics() {
@@ -235,4 +236,80 @@ fn exploring_traits() {
 
     let pair = Pair::new(5, 9);
     pair.cmp_display();
+}
+
+fn exploring_lifetimes() {
+    // Every reference has a lifetime
+    {
+        // outer scope
+        // An interesting note about delcaring variables before assigning
+        // anything to them- while it may seem like this is null, it isn't
+        // because rust doesn't allow that and if you try to run the code before
+        // assigning a value to it, rust won't compile
+        let r; //                          +- 'a
+        {
+            //                                  |
+            let x = 5; //           +- 'b   |
+            r = &x; //                  |       |
+        } //                           -+       |
+          // println!("r: {}", r);  //          |
+    } //                                       -+
+      // This wouldn't compile because it is assigned to a reference of x. The
+      // lifetime of x ends at the end of the inner scope, so r can't point to
+      // the value of x, since x doesn't exist in the outer scope
+      // println!("r: {}", r); (see the line above this)
+
+    {
+        // Here we can use r because x has a longer lifetime, and will always be
+        // valid when r is valid
+        let x = 5; //                 +- 'a
+        let r = &x; //       +- 'b   |
+        println!("r: {}", r); //  |       |
+                              // -+       |
+    } //                                 -+
+
+    {
+        let string1 = String::from("abcd");
+        let string2 = "xyz";
+        let result = generics::longest(string1.as_str(), string2);
+        println!("The longest string is {}", result);
+    }
+
+    {
+        let string1 = String::from("this string is long");
+        {
+            let string2 = String::from("xyz");
+            // In this case, string2 has a shorter lifetime, so result must last
+            // at most that long
+            let result = generics::longest(string1.as_str(), string2.as_str());
+            println!("{}", result);
+        }
+        // We wouldn't be able to run this line because the shorter lifetime is
+        // over
+        // println!("{}", result);
+    }
+
+    {
+        let novel = String::from("Call me Ishmael. Some years ago...");
+        let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+        let i = generics::ImportantExcerpt {
+            part: first_sentence,
+        };
+    }
+
+    // One special lifetime that can be used is "'static".  This means that this
+    // reference can live for the entire duration of the program.  All string
+    // literals have this lifetime, since string literals are stored in the
+    // program's binary, which is always available.  The compiler may recommend
+    // using this when raising errors, but it's important to consider if that
+    // lifetime is really desired
+    let s: &'static str = "I have a static lifetime";
+
+    {
+        let a = "longest string";
+        let b = "short str";
+        let c = "This is my announcement";
+        let d = generics::longest_with_announcement(a, b, c);
+        println!("{}", d);
+    }
 }
