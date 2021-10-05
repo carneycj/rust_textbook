@@ -100,6 +100,50 @@ mod tests {
             Err(String::from("two plus two does not equal four"))
         }
     }
+
+    #[test]
+    fn this_test_will_pass() {
+        // Passed tests won't return any print lines, just an 'ok'
+        // If you want rust to not capture the output, use '
+        // cargo test -- --show-output'
+        let value = prints_and_returns_10(4);
+        assert_eq!(value, 10);
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        // Failed tests will return strings to help troubleshoot
+        let value = prints_and_returns_10(8);
+        assert_eq!(value, 5);
+    }
+
+    #[test]
+    fn two_add_two() {
+        assert_eq!(add_two(2), 4);
+    }
+
+    #[test]
+    fn five_add_two() {
+        // We can run tests on all tests with a subset of a string in the name
+        // too with 'cargo test add'
+        assert_eq!(add_two(5), 7);
+    }
+
+    #[test]
+    fn one_hundred() {
+        // We can run just one test with 'cargo test one_hundred'
+        assert_eq!(add_two(100), 102);
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // We can also make it so that a test only runs if we specifically ask
+        // for it using #[ignore].  This is useful for tests that are really
+        // slow and so only want to run when making changes that could affect it
+        // If we want to run all ignored tests, use 'cargo test -- -- ignored'
+        assert_eq!(add_two(5), 7);
+    }
 }
 
 #[derive(Debug)]
@@ -142,4 +186,9 @@ impl Guess {
         }
         Guess { value }
     }
+}
+
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
 }
