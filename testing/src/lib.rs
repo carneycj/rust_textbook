@@ -1,5 +1,46 @@
 // To run tests, use 'cargo test'
 
+fn info() {
+    // A test is a function that's annotated with the 'test' attribute
+    // Attributes are metadata about pieces of rust code
+    // You create test function by adding #[test] the line above the function
+    // definition
+    println!("Hello, world!");
+
+    // cargo test has command line options that can go into 'cargo test' or the
+    // resulting test binary.
+    // 'cargo test': cargo test --help
+    // Resulting Binary: cargo test -- --help
+
+    // Since the tests are run in parallel on separate threads, tests cannot
+    // depend on one another or on any shared state, including a shared
+    // environment, such as the current working directory or environment
+    // variables.  Ways to work around this are to create unique files for each
+    // test, or to make only one thread do all of the tests using the command
+    // cargo test -- --test-threads=1
+
+    // Rust's testing mentality is to use unit tests and integration tests.
+    // Unit tests are small and focused, testing individual functions and can
+    // test private interfaces.  Integration tests are entirely external to your
+    // library and use your code in the same way any other external code would,
+    // using only public interfaces and potentially using multiple modules per
+    // test.  It's important to use both, making sure that your functions and
+    // modules work both individually and together
+
+    // Unit Tests go in the src directory in the same file as the code that it
+    // is testing.  The convention is to create a module named tests in each
+    // file to contain the test functions and to annotate the module with
+    // #[cfg(test)].  That annotation on the tests module tells Rust to only
+    // compile and run the code when testing, not running.
+
+    // Integration Tests are entirely external to the library.  They use the
+    // library the same way any external code would use it.  This means that the
+    // tests can only access public methods.  Individual methods can work fine,
+    // but create issues once working together.  All integration tests need to
+    // be in the tests directory.  This is at the same level as src.  In it, as
+    // many test files can be created
+}
+
 #[cfg(test)]
 mod tests {
     // We need this line to be able to access the other items.  The tests module
@@ -13,6 +54,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn fail_test() {
         // Each test is run on a new thread, and if a thread dies, the test is
         // marked as failed
@@ -111,6 +153,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn this_test_will_fail() {
         // Failed tests will return strings to help troubleshoot
         let value = prints_and_returns_10(8);
@@ -144,6 +187,19 @@ mod tests {
         // If we want to run all ignored tests, use 'cargo test -- -- ignored'
         assert_eq!(add_two(5), 7);
     }
+
+    #[test]
+    fn test_private() {
+        // You can test private functions too.  Test modules are normal modules
+        // just with a test attribute, so it can access other methods in the
+        // library like normal
+        assert_eq!(internal_adder(2, 2), 4);
+    }
+
+    #[test]
+    fn internal() {
+        assert_eq!(internal_adder(2, 2), 4);
+    }
 }
 
 #[derive(Debug)]
@@ -160,7 +216,7 @@ impl Rectangle {
 }
 
 pub fn add_two(a: i32) -> i32 {
-    a + 2
+    internal_adder(a, 2)
 }
 
 pub fn greeting(name: &str) -> String {
@@ -188,7 +244,13 @@ impl Guess {
     }
 }
 
-fn prints_and_returns_10(a: i32) -> i32 {
+pub fn prints_and_returns_10(a: i32) -> i32 {
     println!("I got the value {}", a);
     10
 }
+
+fn internal_adder(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// Pick up at the tests directory.  It isn't working
