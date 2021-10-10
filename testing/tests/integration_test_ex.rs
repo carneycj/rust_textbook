@@ -1,5 +1,6 @@
 // It's probably a good idea to use 'extern crate' instead of 'use' to really
-// drive home the fact that it's external
+// drive home the fact that it's external.  Something I saw on MIT site, not
+// Rustlang book.
 extern crate testing;
 
 // Integration tests are only included when running 'cargo test' when all unit
@@ -26,10 +27,3 @@ fn using_common() {
     common::setup();
     assert_eq!(4, 4);
 }
-
-// Integration tests can only be run on library functions/ modules.  Binaries
-// don't have this functionality because they don't expose their functionality
-// externally.  This is why binaries typically will have a simple 'main.rs' and
-// then pull in functionality from the libraries.  This lets you do integration
-// testing while still creating a proper application.  The small amount of code
-// in main won't need full testing.

@@ -27,6 +27,9 @@ fn info() {
     // test.  It's important to use both, making sure that your functions and
     // modules work both individually and together
 
+    // You can run tests by the module, which would be done with the command
+    // 'cargo test <module name>::'
+
     // Unit Tests go in the src directory in the same file as the code that it
     // is testing.  The convention is to create a module named tests in each
     // file to contain the test functions and to annotate the module with
@@ -39,6 +42,13 @@ fn info() {
     // but create issues once working together.  All integration tests need to
     // be in the tests directory.  This is at the same level as src.  In it, as
     // many test files can be created
+
+    // Integration tests can only be run on library functions/ modules.  Binaries
+    // don't have this functionality because they don't expose their functionality
+    // externally.  This is why binaries typically will have a simple 'main.rs' and
+    // then pull in functionality from the libraries.  This lets you do integration
+    // testing while still creating a proper application.  The small amount of code
+    // in main won't need full testing.
 }
 
 #[cfg(test)]
@@ -244,7 +254,23 @@ impl Guess {
     }
 }
 
+/// This is a Doc string.  You use three /s.  Adding 3 "`" right after denotes
+/// a doc test:
+///```
+/// let result = testing::prints_and_returns_10(3);
+/// assert_eq!(result, 10);
+/// ```
 pub fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
+}
+
+/// Another doc string (you can pass arguments in if you lead it with 'rust,'
+/// ```rust,ignore
+/// let result = testing::prints_and_returns_10_too(5);
+/// assert_eq!(result, 5);
+/// ```
+pub fn prints_and_returns_10_too(a: i32) -> i32 {
     println!("I got the value {}", a);
     10
 }
@@ -252,5 +278,3 @@ pub fn prints_and_returns_10(a: i32) -> i32 {
 fn internal_adder(a: i32, b: i32) -> i32 {
     a + b
 }
-
-// Pick up at the tests directory.  It isn't working
