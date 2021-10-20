@@ -15,9 +15,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Searching for {}", config.query);
-    println!("In file {}", config.filename);
-
     // We use if let rather than unwrap_or_else because we don't care about the
     // success, only the error case.
     if let Err(e) = io_project::run(config) {
