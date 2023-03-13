@@ -1,1 +1,1 @@
-/home/chris/Documents/rust/rust_textbook/io_project/target/debug/io_project: /home/chris/Documents/rust/rust_textbook/io_project/src/lib.rs /home/chris/Documents/rust/rust_textbook/io_project/src/main.rs
+/home/chris/Documents/Rust/rust_textbook/ch12_io_project/target/debug/io_project: /home/chris/Documents/Rust/rust_textbook/ch12_io_project/src/lib.rs /home/chris/Documents/Rust/rust_textbook/ch12_io_project/src/main.rs
